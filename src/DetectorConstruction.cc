@@ -76,7 +76,7 @@ DetectorConstruction::DetectorConstruction()
   
   // materials
   DefineMaterials();
-  SetAbsorberMaterial("G4_Si");
+  SetAbsorberMaterial("G4_Pb");
   SetGapMaterial("G4_AIR");
   
   // create commands for interactive definition of the calorimeter
@@ -103,7 +103,7 @@ void DetectorConstruction::DefineMaterials()
 //
 G4NistManager* man = G4NistManager::Instance();
 fDefaultMaterial = man->FindOrBuildMaterial("G4_Galactic");
-man->FindOrBuildMaterial("G4_Si");
+fAbsorberMaterial = man->FindOrBuildMaterial("G4_Si");
 man->FindOrBuildMaterial("G4_Si");
 
 // print table
@@ -155,7 +155,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructCalorimeter()
                     fCalorThickness/2,fCalorSizeYZ/2,fCalorSizeYZ/2);//size
                                  
       fLogicCalor = new G4LogicalVolume(fSolidCalor,        //its solid
-                                        fDefaultMaterial,   //its material
+                                        fAbsorberMaterial,   //its material
                                         "Calorimeter");     //its name
                                            
       fPhysiCalor = new G4PVPlacement(0,                    //no rotation
@@ -173,7 +173,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructCalorimeter()
                        fLayerThickness/2,fCalorSizeYZ/2,fCalorSizeYZ/2); //size
                        
       fLogicLayer = new G4LogicalVolume(fSolidLayer,        //its solid
-                                       fDefaultMaterial,    //its material
+                                       fAbsorberMaterial,    //its material
                                        "Layer");            //its name
       if (fNbOfLayers > 1)                                      
         fPhysiLayer = new G4PVReplica("Layer",              //its name
@@ -203,7 +203,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructCalorimeter()
                           
       fLogicAbsorber = new G4LogicalVolume(fSolidAbsorber,    //its solid
                                             fAbsorberMaterial, //its material
-                                            fAbsorberMaterial->GetName());//name
+                                            fDefaultMaterial->GetName());//name
                                                 
       fPhysiAbsorber = new G4PVPlacement(0,                   //no rotation
                           G4ThreeVector(0.,0.,0.),  //its position
