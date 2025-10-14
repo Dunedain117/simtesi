@@ -36,7 +36,7 @@
 #include "ActionInitialization.hh"
 
 #include "G4RunManagerFactory.hh"
-
+#include "G4EmLivermorePhysics.hh" 
 #include "G4UImanager.hh"
 
 #include "G4PhysListFactory.hh"
@@ -83,7 +83,8 @@ int main(int argc,char** argv)
   }
    // Reference PhysicsList via its name
   physList = factory.GetReferencePhysList(physListName);
-
+  physList->SetDefaultCutValue(0.1*CLHEP::nm);
+  physList->ReplacePhysics(new G4EmLivermorePhysics());
   // Set mandatory initialization classes
   //
   DetectorConstruction* detector = new DetectorConstruction;

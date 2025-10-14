@@ -55,7 +55,11 @@
 #include "G4SystemOfUnits.hh"
 #include "G4RunManager.hh"
 
+
+#include "G4UserLimits.hh"
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+
 
 DetectorConstruction::DetectorConstruction()
 :G4VUserDetectorConstruction(),
@@ -69,15 +73,15 @@ DetectorConstruction::DetectorConstruction()
 {
   // default parameter values of the calorimeter
   fAbsorberThickness = 3.*um;
-  fGapThickness      =  0.*mm;
+  fGapThickness      =  0.*um;
   fNbOfLayers        = 1;
   fCalorSizeYZ       = 3.*um;
   ComputeCalorParameters();
   
   // materials
   DefineMaterials();
-  SetAbsorberMaterial("G4_Pb");
-  SetGapMaterial("G4_AIR");
+  SetAbsorberMaterial("G4_Si");
+  SetGapMaterial("G4_Si");
   
   // create commands for interactive definition of the calorimeter
   fDetectorMessenger = new DetectorMessenger(this);
@@ -103,7 +107,7 @@ void DetectorConstruction::DefineMaterials()
 //
 G4NistManager* man = G4NistManager::Instance();
 fDefaultMaterial = man->FindOrBuildMaterial("G4_Galactic");
-fAbsorberMaterial = man->FindOrBuildMaterial("G4_Si");
+man->FindOrBuildMaterial("G4_Si");
 man->FindOrBuildMaterial("G4_Si");
 
 // print table
@@ -112,6 +116,7 @@ G4cout << *(G4Material::GetMaterialTable()) << G4endl;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
 
 G4VPhysicalVolume* DetectorConstruction::ConstructCalorimeter()
 {
@@ -155,7 +160,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructCalorimeter()
                     fCalorThickness/2,fCalorSizeYZ/2,fCalorSizeYZ/2);//size
                                  
       fLogicCalor = new G4LogicalVolume(fSolidCalor,        //its solid
-                                        fAbsorberMaterial,   //its material
+                                        fDefaultMaterial,   //its material
                                         "Calorimeter");     //its name
                                            
       fPhysiCalor = new G4PVPlacement(0,                    //no rotation
@@ -164,7 +169,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructCalorimeter()
                                      "Calorimeter",         //its name
                                      fLogicWorld,           //its mother  volume
                                      false,              //no boolean operation
-                                     0, true);                    //copy number
+                                     0);                    //copy number
   
   //                                 
   // Layer
@@ -173,7 +178,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructCalorimeter()
                        fLayerThickness/2,fCalorSizeYZ/2,fCalorSizeYZ/2); //size
                        
       fLogicLayer = new G4LogicalVolume(fSolidLayer,        //its solid
-                                       fAbsorberMaterial,    //its material
+                                       fDefaultMaterial,    //its material
                                        "Layer");            //its name
       if (fNbOfLayers > 1)                                      
         fPhysiLayer = new G4PVReplica("Layer",              //its name
@@ -203,15 +208,15 @@ G4VPhysicalVolume* DetectorConstruction::ConstructCalorimeter()
                           
       fLogicAbsorber = new G4LogicalVolume(fSolidAbsorber,    //its solid
                                             fAbsorberMaterial, //its material
-                                            fDefaultMaterial->GetName());//name
+                                            fAbsorberMaterial->GetName());//name
                                                 
       fPhysiAbsorber = new G4PVPlacement(0,                   //no rotation
-                          G4ThreeVector(0.,0.,0.),  //its position
+                          G4ThreeVector(-fGapThickness/2,0.,0.),  //its position
                                         fLogicAbsorber,     //its logical volume
                                         fAbsorberMaterial->GetName(), //its name
                                         fLogicLayer,          //its mother
                                         false,               //no boulean operat
-                                        0, true);                   //copy number
+                                        0);                   //copy number
                                         
     }
   
@@ -248,7 +253,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructCalorimeter()
   simpleBoxVisAtt->SetVisibility(true);
   fLogicCalor->SetVisAttributes(simpleBoxVisAtt);
 
-  //fCalorThickness
+  //
   //always return the physical World
   //
   return fPhysiWorld;
@@ -259,7 +264,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructCalorimeter()
 void DetectorConstruction::PrintCalorParameters()
 {
   G4cout << "\n------------------------------------------------------------"
-         << "\n---> The calorimeter is " << fNbOfLayers << " lfGapThicknessayers of: [ "
+         << "\n---> The calorimeter is " << fNbOfLayers << " layers of: [ "
          << fAbsorberThickness/mm << "mm of " << fAbsorberMaterial->GetName() 
          << " + "
          << fGapThickness/mm << "mm of " << fGapMaterial->GetName() << " ] " 
