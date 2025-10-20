@@ -61,7 +61,7 @@ target_link_libraries(AnaEx01 ${Geant4_LIBRARIES})
 # relies on these scripts being in the current working directory.
 #
 set(AnaEx01_SCRIPTS
-    run.mac init_vis.mac vis.mac gamma.mac cosmicMuons.mac
+    run.mac init_vis.mac vis.mac gamma.mac cosmicMuons.mac runEle.mac runGamma.mac
   )
 
 foreach(_script ${AnaEx01_SCRIPTS})

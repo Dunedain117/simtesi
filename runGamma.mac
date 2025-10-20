@@ -7,13 +7,13 @@
 /control/verbose 2
 /run/verbose 2
 /event/verbose 0
-/tracking/verbose 2
+/tracking/verbose 0 
 #
 # initialize
 /run/initialize
 #
-/gps/particle e-
-/gps/energy 0.2 MeV
+/gps/particle gamma
+/gps/energy 0.511 MeV
 /gps/position -10 0 0 um
 /gps/direction 1 0 0
-/run/beamOn 100
+/run/beamOn 1000000000
