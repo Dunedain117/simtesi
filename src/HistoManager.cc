@@ -85,13 +85,13 @@ void HistoManager::Book()
     // analysisManager->SetFirstHistoId(1);
 
     // id = 0
-    analysisManager->CreateH1("EAbs","Edep in absorber (MeV)", 200, 0., 600*keV);
+    analysisManager->CreateH1("EAbs","Edep in absorber (keV)", 180, 0., 20*keV,"keV");
     // id = 1
-    analysisManager->CreateH1("EGap","Edep in gap (MeV)", 200, 0., 600*keV);
+    analysisManager->CreateH1("EGap","Edep in gap (keV)", 180, 0., 20*keV,"keV");
     // id = 2
-    analysisManager->CreateH1("LAbs","trackL in absorber (mm)", 100, 0., 1*mm);
+    analysisManager->CreateH1("LAbs","trackL in absorber (mm)", 100, 0., 10*um);
     // id = 3
-    analysisManager->CreateH1("LGap","trackL in gap (mm)", 100, 0., 1*mm);
+    analysisManager->CreateH1("LGap","trackL in gap (mm)", 100, 0., 10*um);
 
     // Create ntuples.
     // Ntuples ids are generated automatically starting from 0.
